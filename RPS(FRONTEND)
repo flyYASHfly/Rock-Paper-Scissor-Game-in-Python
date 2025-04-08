@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rock Paper Scissors Game</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            background-color: #f0f8ff;
+            margin-top: 50px;
+        }
+        h1 {
+            color: #333;
+            font-size: 3rem;
+        }
+        .choices {
+            margin: 30px 0;
+        }
+        .choices img {
+            width: 100px;
+            margin: 20px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .choices img:hover {
+            transform: scale(1.2);
+        }
+        #result {
+            font-size: 2rem;
+            margin-top: 30px;
+            color: #444;
+            min-height: 70px;
+        }
+        .score {
+            font-size: 1.5rem;
+            margin-top: 20px;
+        }
+        .shake {
+            animation: shake 0.5s;
+        }
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            20% { transform: translate(-1px, -2px) rotate(-1deg); }
+            40% { transform: translate(-3px, 0px) rotate(1deg); }
+            60% { transform: translate(3px, 2px) rotate(0deg); }
+            80% { transform: translate(1px, -1px) rotate(1deg); }
+            100% { transform: translate(-1px, 2px) rotate(-1deg); }
+        }
+        button {
+            margin-top: 30px;
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Rock Paper Scissors</h1>
+
+    <div class="choices">
+        <img id="rock" src="https://img.icons8.com/emoji/96/oncoming-fist-emoji.png" alt="Rock" onclick="playGame('rock', this)">
+        <img id="paper" src="https://img.icons8.com/emoji/96/raised-hand-emoji.png" alt="Paper" onclick="playGame('paper', this)">
+        <img id="scissor" src="https://img.icons8.com/emoji/96/victory-hand-emoji.png" alt="Scissor" onclick="playGame('scissor', this)">
+    </div>
+
+    <div id="result">Make your move!</div>
+
+    <div class="score">
+        You: <span id="user-score">0</span> | Computer: <span id="computer-score">0</span>
+    </div>
+
+    <button onclick="restartGame()">🔄 Play Again</button>
+
+    <!-- Sound Effects -->
+    <audio id="click-sound" src="https://www.soundjay.com/buttons/sounds/button-29.mp3"></audio>
+    <audio id="win-sound" src="https://www.soundjay.com/human/sounds/applause-8.mp3"></audio>
+
+    <script>
+        let userScore = 0;
+        let computerScore = 0;
+
+        function playGame(userChoice, element) {
+            const clickSound = document.getElementById('click-sound');
+            clickSound.play();
+
+            const choices = ['rock', 'paper', 'scissor'];
+            const computerChoice = choices[Math.floor(Math.random() * 3)];
+
+            let resultMessage = `You chose ${userChoice}, Computer chose ${computerChoice}. `;
+
+            if (userChoice === computerChoice) {
+                resultMessage += "It's a draw! 🤝";
+            } else if (
+                (userChoice === 'rock' && computerChoice === 'scissor') ||
+                (userChoice === 'paper' && computerChoice === 'rock') ||
+                (userChoice === 'scissor' && computerChoice === 'paper')
+            ) {
+                userScore++;
+                resultMessage += "You win! 🎉";
+
+                // Play win sound and animate
+                document.getElementById('win-sound').play();
+                animateElement(element);
+            } else {
+                computerScore++;
+                resultMessage += "Computer wins! 🤖";
+            }
+
+            document.getElementById('result').innerText = resultMessage;
+            document.getElementById('user-score').innerText = userScore;
+            document.getElementById('computer-score').innerText = computerScore;
+        }
+
+        function animateElement(element) {
+            element.classList.add('shake');
+            setTimeout(() => {
+                element.classList.remove('shake');
+            }, 500);
+        }
+
+        function restartGame() {
+            userScore = 0;
+            computerScore = 0;
+            document.getElementById('user-score').innerText = userScore;
+            document.getElementById('computer-score').innerText = computerScore;
+            document.getElementById('result').innerText = "Make your move!";
+        }
+    </script>
+
+</body>
+</html>
